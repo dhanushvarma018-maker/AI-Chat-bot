@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gemini AI Chatbot - Google Gemini LLM</title>
+  <meta name="description"
+    content="A powerful, modern AI chatbot powered by Google Gemini LLM featuring streaming responses, decoupled architecture, and clean UI.">
+  <meta name="keywords" content="gemini chatbot, google gemini llm, artificial intelligence, ai assistant, full stack">
+  <meta name="author" content="Gemini Fullstack Chatbot">
+
+  <!-- Google Fonts: Outfit & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/jpeg" href="assets/avatar.jpg">
+</head>
+
+<body>
+  <div class="app-wrapper">
+    <!-- Top Application Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="brand-avatar-container">
+          <img src="assets/avatar.jpg" alt="Gemini AI Core Avatar" class="brand-avatar" id="brand-avatar">
+          <span class="status-indicator-dot online" id="brand-status-dot" title="System Ready"></span>
+        </div>
+        <div class="brand-text">
+          <div class="title-row">
+            <h1 class="app-title" id="app-title">Gemini AI</h1>
+            <span class="badge badge-glow" id="version-badge">2.5 Flash</span>
+          </div>
+          <span class="app-subtitle">Powered by Dhanush Varma LLM</span>
+        </div>
+      </div>
+
+      <!-- Controls & Status Bar -->
+      <div class="header-right">
+        <!-- Live Backend Status Pill -->
+        <div class="status-pill checking" id="backend-status-pill" title="Checking backend connection status...">
+          <span class="pulse-dot"></span>
+          <span class="status-text" id="backend-status-text">Connecting...</span>
+        </div>
+
+        <!-- Model Selector Dropdown -->
+        <div class="select-group" title="Select Gemini Model">
+          <label for="model-select" class="sr-only">Model</label>
+          <select id="model-select" class="custom-select" aria-label="Select Gemini Model">
+            <option value="gemini-3.5-flash" selected>Gemini 3.5 Flash</option>
+            <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash Lite</option>
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+          </select>
+        </div>
+
+        <!-- System Persona Dropdown -->
+        <div class="select-group" title="AI Persona / Instruction Preset">
+          <label for="persona-select" class="sr-only">Persona</label>
+          <select id="persona-select" class="custom-select" aria-label="Select Persona">
+            <option value="default" selected>🤖 Helpful Assistant</option>
+            <option value="coder">💻 Expert Developer</option>
+            <option value="creative">✨ Creative Writer</option>
+            <option value="concise">⚡ Ultra Concise</option>
+            <option value="academic">🎓 Academic Tutor</option>
+          </select>
+        </div>
+
+        <!-- Header Action Buttons -->
+        <div class="header-actions">
+          <button type="button" id="open-settings-btn" class="icon-btn" title="API Key & Backend Settings"
+            aria-label="Open Settings">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+              </path>
+            </svg>
+          </button>
+
+          <button type="button" id="clear-chat-btn" class="icon-btn" title="Clear Chat History"
+            aria-label="Clear Chat History">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Chat Workspace -->
+    <main class="chat-main" id="chat-main">
+      <!-- Missing Key Warning Banner (Shown if API key is not configured) -->
+      <aside class="api-banner hidden" id="api-banner" role="alert">
+        <div class="banner-content">
+          <span class="banner-icon">🔑</span>
+          <div class="banner-text">
+            <strong>Gemini API Key Required:</strong> Add your key to <code class="inline-code">backend/.env</code> or
+            set it directly via the Settings modal.
+          </div>
+        </div>
+        <div class="banner-actions">
+          <button type="button" id="banner-settings-btn" class="btn-banner">Configure Key</button>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer"
+            class="btn-banner-link">Get Free Key ↗</a>
+        </div>
+      </aside>
+
+      <!-- Welcome Hero (Displayed when conversation is empty) -->
+      <section class="welcome-hero" id="welcome-hero">
+        <div class="hero-glow"></div>
+        <div class="hero-avatar-wrapper">
+          <img src="assets/avatar.jpg" alt="Gemini Orb AI" class="hero-avatar">
+        </div>
+        <h2 class="hero-heading">What would you like to explore today?</h2>
+        <p class="hero-subheading">Experience real-time intelligence powered by Google Gemini LLM with streaming
+          responses and clean full-stack architecture.</p>
+
+        <!-- Starter Prompt Cards Grid -->
+        <div class="prompt-grid" id="prompt-grid">
+          <button type="button" class="prompt-card"
+            data-prompt="Explain quantum computing in 3 simple, beginner-friendly bullet points with an analogy.">
+            <span class="prompt-icon">⚛️</span>
+            <div class="prompt-info">
+              <span class="prompt-title">Quantum Computing</span>
+              <span class="prompt-desc">Explain simply with an analogy</span>
+            </div>
+          </button>
+
+          <button type="button" class="prompt-card"
+            data-prompt="Write a clean, reusable JavaScript debounce function with TypeScript types and an example.">
+            <span class="prompt-icon">💻</span>
+            <div class="prompt-info">
+              <span class="prompt-title">Code Helper</span>
+              <span class="prompt-desc">Reusable JS debounce function</span>
+            </div>
+          </button>
+
+          <button type="button" class="prompt-card"
+            data-prompt="Draft a polite and persuasive email requesting constructive feedback on a recent product launch.">
+            <span class="prompt-icon">✍️</span>
+            <div class="prompt-info">
+              <span class="prompt-title">Draft an Email</span>
+              <span class="prompt-desc">Polite feedback request email</span>
+            </div>
+          </button>
+
+          <button type="button" class="prompt-card"
+            data-prompt="Compare Gemini 2.5 Flash vs GPT-4o in terms of multimodal performance, speed, and context window.">
+            <span class="prompt-icon">🚀</span>
+            <div class="prompt-info">
+              <span class="prompt-title">Gemini Capabilities</span>
+              <span class="prompt-desc">Compare speed & context features</span>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- Chat Messages Stream Container -->
+      <section class="messages-container" id="messages-container" aria-label="Chat messages stream"></section>
+
+      <!-- Streaming / Typing Indicator -->
+      <div class="typing-indicator-row hidden" id="typing-indicator" aria-hidden="true">
+        <div class="bot-avatar-small">
+          <img src="assets/avatar.jpg" alt="Gemini">
+        </div>
+        <div class="typing-bubble">
+          <div class="typing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span class="typing-label" id="typing-label">Gemini is thinking...</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Input Area -->
+    <footer class="chat-footer">
+      <form class="input-form" id="chat-form">
+        <div class="input-bar-container">
+          <textarea id="user-input" class="chat-textarea"
+            placeholder="Ask Gemini anything... (Press Enter to send, Shift+Enter for new line)" rows="1"
+            aria-label="Message prompt input" required></textarea>
+
+          <div class="input-controls">
+            <!-- Stop Generation Button (Active during stream) -->
+            <button type="button" id="stop-generation-btn" class="control-btn btn-stop hidden" title="Stop Generation"
+              aria-label="Stop Generating Response">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+              </svg>
+              <span>Stop</span>
+            </button>
+
+            <!-- Send Message Button -->
+            <button type="submit" id="send-btn" class="control-btn btn-send" title="Send message (Enter)"
+              aria-label="Send Message">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="input-footnote">
+          <span>Decoupled Full-Stack Architecture • <span id="active-model-name">Gemini 2.5 Flash</span></span>
+          <span class="shortcut-tip">Enter ↵ to send • Shift + Enter ↵ for newline</span>
+        </div>
+      </form>
+    </footer>
+  </div>
+
+  <!-- Settings & API Key Modal -->
+  <div class="modal-backdrop hidden" id="modal-backdrop" aria-hidden="true">
+    <div class="settings-modal" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
+          </svg>
+          <h2 id="modal-title">Settings & Configuration</h2>
+        </div>
+        <button type="button" class="close-modal-btn" id="close-modal-btn" aria-label="Close dialog">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- API Key Input -->
+        <div class="form-group">
+          <div class="label-row">
+            <label for="settings-api-key">Gemini API Key</label>
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer"
+              class="link-external">Get Free Key ↗</a>
+          </div>
+          <p class="field-hint">You can set this in <code class="inline-code">backend/.env</code> or enter it here for
+            client-directed requests.</p>
+          <div class="input-with-button">
+            <input type="password" id="settings-api-key" placeholder="AIzaSy..." autocomplete="off">
+            <button type="button" id="toggle-key-visibility" class="btn-toggle-eye"
+              title="Toggle visibility">👁️</button>
+          </div>
+        </div>
+
+        <!-- Backend URL Configuration -->
+        <div class="form-group">
+          <label for="settings-backend-url">Backend Server URL</label>
+          <p class="field-hint">Endpoint for the Node.js Express server (default: <code
+              class="inline-code">http://localhost:3001</code>).</p>
+          <input type="text" id="settings-backend-url" placeholder="http://localhost:3001">
+        </div>
+
+        <!-- Custom System Instruction -->
+        <div class="form-group">
+          <label for="settings-system-prompt">Custom System Instruction (Optional)</label>
+          <p class="field-hint">Guide Gemini's tone, personality, or behavioral constraints.</p>
+          <textarea id="settings-system-prompt" rows="3"
+            placeholder="You are a helpful, brilliant AI assistant..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="cancel-settings-btn">Cancel</button>
+        <button type="button" class="btn-primary" id="save-settings-btn">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
